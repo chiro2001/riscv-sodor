@@ -212,8 +212,8 @@ class ScratchPadMemoryBase(num_core_ports: Int, num_bytes: Int = (1 << 21), useA
    async_data.write(debug_port_req.addr, debug_port_req.data, debug_port_req.getTLSize, debug_port_wen)
 }
 
-class AsyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 21))(implicit conf: SodorCoreParams) 
+class AsyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 12))(implicit conf: SodorCoreParams)
    extends ScratchPadMemoryBase(num_core_ports, num_bytes, true)(conf)
 
-class SyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 21))(implicit conf: SodorCoreParams) 
+class SyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 12))(implicit conf: SodorCoreParams)
    extends ScratchPadMemoryBase(num_core_ports, num_bytes, false)(conf)
