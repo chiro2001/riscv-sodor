@@ -149,8 +149,9 @@ class SodorTile(
       Description(name, mapping ++
                         cpuProperties ++
                         nextLevelCacheProperty ++
-                        tileProperties ++
-                        dtimProperty)
+                        tileProperties
+                        // ++ dtimProperty
+      )
     }
   }
 
@@ -182,6 +183,7 @@ class SodorTileModuleImp(outer: SodorTile) extends BaseTileModuleImp(outer){
   require(outer.dtim_address.get.length == 1, "Sodor core can only have one scratchpad.")
 
   // Tile
+  // val tile = Module(outer.sodorParams.core.internalTile.instantiate(outer.dtim_address.get.apply(0)))
   val tile = Module(outer.sodorParams.core.internalTile.instantiate(outer.dtim_address.get.apply(0)))
 
   // Add scratchpad adapter
@@ -204,7 +206,8 @@ class SodorTileModuleImp(outer: SodorTile) extends BaseTileModuleImp(outer){
 class WithNSodorCores(
   n: Int = 1,
   overrideIdOffset: Option[Int] = None,
-  internalTile: SodorInternalTileFactory = Stage3Factory()
+  internalTile: SodorInternalTileFactory = Stage3Factory(),
+  scratchBase: BigInt = BigInt(0x80000000L)
 ) extends Config((site, here, up) => {
   case TilesLocated(InSubsystem) => {
     // Calculate the next available hart ID (since hart ID cannot be duplicated)
@@ -220,7 +223,7 @@ class WithNSodorCores(
             nSets = 4096, // Very large so we have enough SPAD for bmark tests
             nWays = 1,
             nMSHRs = 0,
-            scratch = Some(0x80000000L)
+            scratch = Some(scratchBase)
           ),
           core = SodorCoreParams(
             ports = internalTile.nMemPorts,
